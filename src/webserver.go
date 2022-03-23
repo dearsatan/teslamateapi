@@ -30,6 +30,19 @@ var (
 	allowList []string
 )
 
+// authorize incoming request
+func Authorize() gin.HandlerFunc {
+    return func(c *gin.Context) {
+        validToken, errorMessage := validateAuthToken(c)
+        if !validToken {
+            c.Abort()
+            TeslaMateAPIHandleOtherResponse(c, http.StatusUnauthorized, "TeslaMateAPI", gin.H{"error": errorMessage})
+            return
+        }
+        c.Next()
+    }
+}
+
 // main function
 func main() {
 
@@ -79,6 +92,9 @@ func main() {
 
 	// disable proxy feature of gin
 	_ = r.SetTrustedProxies(nil)
+
+	// authentication for the endpoint
+	r.Use(Authorize())
 
 	// root endpoint telling API is running
 	r.GET("/", func(c *gin.Context) {

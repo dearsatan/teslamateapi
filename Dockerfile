@@ -10,6 +10,9 @@ WORKDIR /go/src/
 # copy go mod files
 COPY go.mod go.sum ./
 
+# add go download proxy
+RUN go env -w GOPROXY=https://goproxy.cn,direct
+
 # download go mods
 RUN go mod download
 
