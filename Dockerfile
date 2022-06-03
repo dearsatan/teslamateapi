@@ -1,5 +1,5 @@
-# get latest golang container
-FROM golang:1.18.0
+# get golang container
+FROM golang:1.18.2
 
 # get args
 ARG apiVersion=unknown
@@ -9,6 +9,7 @@ WORKDIR /go/src/
 
 # copy go mod files
 COPY go.mod go.sum ./
+
 
 # add go download proxy
 RUN go env -w GOPROXY=https://goproxy.cn,direct
