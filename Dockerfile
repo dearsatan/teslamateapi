@@ -1,5 +1,5 @@
 # get golang container
-FROM golang:1.18.2
+FROM golang:1.19.0
 
 # get args
 ARG apiVersion=unknown
@@ -9,7 +9,6 @@ WORKDIR /go/src/
 
 # copy go mod files
 COPY go.mod go.sum ./
-
 
 # add go download proxy
 RUN go env -w GOPROXY=https://goproxy.cn,direct
@@ -21,7 +20,7 @@ RUN go mod download
 COPY src/ .
 
 # compile the program
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags="-w -s -X 'main.apiVersion=${apiVersion}'" -o app .
+RUN CGO_ENABLED=0 go build -ldflags="-w -s -X 'main.apiVersion=${apiVersion}'" -o app ./...
 
 
 # get latest alpine container
